@@ -34,6 +34,12 @@ unauthenticated and unchanged.
 - Favorite-deal notifications.
 - Apple login (start with Google + email/password; Apple needs a paid dev account).
 - Points/leaderboard anti-abuse beyond cooldown + the verification seam.
+- **Email verification enforcement — DEFERRED (product-owner decision, 2026-06-21).**
+  §7 originally required verification for email/password, but enforcement needs an
+  email-sending provider. Phase 0 ships with signups immediately active; verification
+  is the first follow-up to wire once a provider (e.g. Resend/SES) is chosen. The
+  `verification` table and Better Auth plumbing already exist. Tracked in
+  `docs/PHASE-1-HANDOFF.md`.
 
 ## 3. Decisions (locked during brainstorming)
 
