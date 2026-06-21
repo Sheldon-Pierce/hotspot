@@ -31,6 +31,7 @@ export async function createProfile(
 
   const { username, displayName } = parsed.data;
 
+  // Fast path: friendly message in the common case.
   const taken = await db
     .select({ userId: profile.userId })
     .from(profile)
@@ -38,11 +39,35 @@ export async function createProfile(
     .limit(1);
   if (taken.length > 0) return { error: "That username is taken." };
 
-  await db.insert(profile).values({
-    userId: session.user.id,
-    username,
-    displayName,
-  });
+  // Authoritative guard: the unique index wins any concurrent race. Map the
+  // resulting unique-violation to a friendly message instead of a raw 500.
+  try {
+    await db.insert(profile).values({
+      userId: session.user.id,
+      username,
+      displayName,
+    });
+  } catch (e) {
+    const constraint = uniqueViolation(e);
+    if (constraint === null) throw e;
+    // profile_pkey => this user already has a profile (concurrent double-submit).
+    if (constraint === "profile_pkey") redirect("/profile");
+    return { error: "That username is taken." };
+  }
 
   redirect("/profile");
+}
+
+/**
+ * Returns the violated constraint name for a Postgres unique violation (23505),
+ * else null. Drizzle wraps the driver error, so the PostgresError (with `.code`
+ * and `.constraint_name`) is on `.cause`; check both to be safe.
+ */
+function uniqueViolation(e: unknown): string | null {
+  const layers = [e, (e as { cause?: unknown } | null)?.cause];
+  for (const layer of layers) {
+    const err = layer as { code?: string; constraint_name?: string } | null | undefined;
+    if (err?.code === "23505") return err.constraint_name ?? "";
+  }
+  return null;
 }
