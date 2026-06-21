@@ -8,6 +8,7 @@ import {
   pgTable, text, timestamp, integer, doublePrecision,
   uniqueIndex, index, primaryKey, pgEnum,
 } from "drizzle-orm/pg-core";
+// `user` is re-exported above via `export *`; imported here by name for FK refs.
 import { user } from "./auth-schema";
 
 // ── Enums ───────────────────────────────────────────────────────────────
@@ -116,7 +117,8 @@ export const pointsLedger = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    checkinId: text("checkin_id"),
+    // set null (not cascade): deleting a check-in must not erase earned points.
+    checkinId: text("checkin_id").references(() => checkin.id, { onDelete: "set null" }),
     reason: text("reason").notNull(), // e.g. "checkin", "new-bar", "badge:explorer"
     amount: integer("amount").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
