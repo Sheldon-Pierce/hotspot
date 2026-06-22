@@ -13,7 +13,10 @@ const STATIC_BG =
 // Canvas is ready.
 const Aurora = dynamic(() => import("@/components/Aurora"), {
   ssr: false,
-  loading: () => <div className="fixed inset-0 -z-10" style={{ background: STATIC_BG }} aria-hidden />,
+  // Blurred to match the Canvas wrapper, so the placeholder→Canvas swap is seamless.
+  loading: () => (
+    <div className="fixed inset-0 -z-10" style={{ background: STATIC_BG, filter: "blur(64px)" }} aria-hidden />
+  ),
 });
 
 export default function AuroraBg({ variant }: { variant?: "full" | "header" }) {
