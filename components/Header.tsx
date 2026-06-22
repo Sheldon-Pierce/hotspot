@@ -1,7 +1,6 @@
 "use client";
 
 import { TIME_PRESETS } from "@/lib/presets";
-import UserMenu from "@/components/auth/UserMenu";
 
 interface HeaderProps {
   view: "list" | "map";
@@ -17,16 +16,11 @@ export default function Header({
   onPresetChange,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-[1100] border-b border-zinc-800 bg-zinc-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
-        <div className="mr-auto">
-          <h1 className="text-xl font-bold tracking-tight text-amber-400">
-            🔥 HotSpot
-          </h1>
-          <p className="text-xs text-zinc-400">
-            live bar crowds &middot; Ballard, Seattle
-          </p>
-        </div>
+    <div className="border-b border-zinc-800 bg-zinc-950/80">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-2.5">
+        <p className="mr-auto text-xs text-zinc-400">
+          live bar crowds &middot; Ballard, Seattle
+        </p>
 
         <select
           value={preset ?? "live"}
@@ -59,9 +53,7 @@ export default function Header({
             </button>
           ))}
         </div>
-
-        <UserMenu />
       </div>
-    </header>
+    </div>
   );
 }
