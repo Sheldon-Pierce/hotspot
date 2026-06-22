@@ -10,24 +10,31 @@ export default function UserMenu() {
 
   if (!data?.user) {
     return (
-      <Link href="/login" className="text-sm font-medium text-amber-400">
+      <Link
+        href="/login"
+        className="rounded-full border border-[var(--hair)] bg-white/5 px-3 py-1 text-sm font-semibold text-[var(--cyan)] transition-colors hover:text-white"
+      >
         Log in
       </Link>
     );
   }
 
+  const link = "text-zinc-400 transition-colors hover:text-white";
   return (
-    <div className="flex items-center gap-3 text-sm">
-      <Link href="/feed" className="font-medium text-zinc-200">
+    <nav className="flex items-center gap-3 text-sm font-medium">
+      <Link href="/feed" className={link}>
         Feed
       </Link>
-      <Link href="/friends" className="font-medium text-zinc-200">
+      <Link href="/friends" className={link}>
         Friends
       </Link>
-      <Link href="/leaderboard" className="font-medium text-zinc-200">
+      <Link href="/leaderboard" className={link}>
         Leaderboard
       </Link>
-      <Link href="/profile" className="font-medium text-zinc-200">
+      <Link
+        href="/profile"
+        className="rounded-full bg-gradient-to-br from-[var(--cyan)] to-[var(--magenta)] px-3 py-1 font-semibold text-[#06060a]"
+      >
         Profile
       </Link>
       <button
@@ -36,10 +43,10 @@ export default function UserMenu() {
           router.push("/");
           router.refresh();
         }}
-        className="text-zinc-400 hover:text-white"
+        className={link}
       >
         Log out
       </button>
-    </div>
+    </nav>
   );
 }

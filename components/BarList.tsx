@@ -1,7 +1,11 @@
 "use client";
 
+import { motion } from "framer-motion";
 import type { BarStatus } from "@/lib/types";
 import { LEVEL_META, TREND_META } from "@/lib/ui";
+import { fadeUp, stagger } from "@/lib/motion";
+import HeatMeter from "@/components/ui/HeatMeter";
+import Pill from "@/components/ui/Pill";
 
 interface BarListProps {
   bars: BarStatus[];
@@ -23,60 +27,61 @@ function sortBars(bars: BarStatus[], favorites: Set<string>): BarStatus[] {
 
 export default function BarList({ bars, favorites, onSelect, onToggleFavorite }: BarListProps) {
   return (
-    <ul className="mx-auto flex max-w-3xl flex-col gap-2 px-4 py-4">
+    <motion.ul
+      variants={stagger}
+      initial="hidden"
+      animate="show"
+      className="mx-auto flex max-w-3xl flex-col gap-2.5 px-4 py-4"
+    >
       {sortBars(bars, favorites).map((status) => {
         const { bar } = status;
         const meta = LEVEL_META[status.level];
         const trendMeta = TREND_META[status.trend];
         const incentive = status.deals.find((d) => d.type === "incentive");
         const fav = favorites.has(bar.id);
+        const packed = status.level === "packed";
         return (
-          <li key={bar.id} className="relative">
-            <button
+          <motion.li key={bar.id} variants={fadeUp} className="relative">
+            <motion.button
+              whileHover={{ y: -2 }}
+              transition={{ duration: 0.2 }}
               onClick={() => onSelect(bar.id)}
-              className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 pr-12 text-left transition-colors hover:border-zinc-600"
+              className="glass w-full rounded-[var(--r-card)] p-4 pr-12 text-left"
+              style={packed ? { boxShadow: "0 0 30px -8px var(--magenta)", borderColor: "rgba(255,45,120,.4)" } : undefined}
             >
               <div className="flex items-center gap-3">
                 <span
-                  className="h-3 w-3 shrink-0 rounded-full"
-                  style={{ backgroundColor: meta.color }}
+                  className="h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: meta.color, boxShadow: `0 0 10px ${meta.color}` }}
                   aria-hidden
                 />
                 <span className="truncate font-semibold text-zinc-100">{bar.name}</span>
-                {incentive && (
-                  <span className="shrink-0 rounded-full bg-emerald-400/15 px-2 py-0.5 text-xs font-medium text-emerald-300">
-                    🎁 {incentive.title}
-                  </span>
-                )}
-                <span className="ml-auto shrink-0 text-sm tabular-nums text-zinc-300">
+                {incentive && <Pill tone="deal">🎁 {incentive.title}</Pill>}
+                <span className="ml-auto shrink-0 text-sm tabular-nums">
                   {status.open ? (
                     <>
                       <span className="font-semibold text-zinc-100">{status.count}</span>
-                      <span className="text-zinc-500"> / {bar.capacity}</span>
+                      <span className="text-[var(--faint)]"> / {bar.capacity}</span>
                     </>
                   ) : (
-                    <span className="text-zinc-500">Closed</span>
+                    <span className="text-[var(--faint)]">Closed</span>
                   )}
                 </span>
               </div>
 
               {status.open && (
-                <div className="mt-3 flex items-center gap-3">
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-800">
-                    <div
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{
-                        width: `${Math.min(100, status.ratio * 100)}%`,
-                        backgroundColor: meta.color,
-                      }}
-                    />
-                  </div>
-                  <span className="w-32 shrink-0 text-right text-xs text-zinc-400">
-                    {meta.label} {trendMeta.icon} {trendMeta.label}
+                <div className="mt-3 flex flex-col gap-1.5">
+                  <HeatMeter ratio={status.ratio} level={status.level} />
+                  <span
+                    className="text-xs font-semibold uppercase tracking-wide"
+                    style={{ color: meta.color }}
+                  >
+                    {meta.label} {trendMeta.icon}{" "}
+                    <span className="font-normal text-[var(--faint)]">{trendMeta.label}</span>
                   </span>
                 </div>
               )}
-            </button>
+            </motion.button>
 
             <button
               onClick={() => onToggleFavorite(bar.id)}
@@ -84,13 +89,16 @@ export default function BarList({ bars, favorites, onSelect, onToggleFavorite }:
               aria-label={fav ? `Unfavorite ${bar.name}` : `Favorite ${bar.name}`}
               aria-pressed={fav}
             >
-              <span className={fav ? "text-amber-400" : "text-zinc-600 hover:text-zinc-400"}>
+              <span
+                className={fav ? "text-[var(--amber)]" : "text-[var(--faint)] hover:text-zinc-300"}
+                style={fav ? { textShadow: "0 0 10px var(--amber)" } : undefined}
+              >
                 {fav ? "★" : "☆"}
               </span>
             </button>
-          </li>
+          </motion.li>
         );
       })}
-    </ul>
+    </motion.ul>
   );
 }

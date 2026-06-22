@@ -4,6 +4,7 @@ import type { BarStatus } from "@/lib/types";
 import { LEVEL_META, TREND_META } from "@/lib/ui";
 import Sparkline from "@/components/Sparkline";
 import CheckInButton from "@/components/CheckInButton";
+import HeatMeter from "@/components/ui/HeatMeter";
 
 interface BarDetailProps {
   status: BarStatus;
@@ -25,11 +26,11 @@ export default function BarDetail({ status, isFavorite, isLoggedIn, onToggleFavo
         onClick={onClose}
         aria-hidden
       />
-      <aside className="fixed inset-x-0 bottom-0 z-[1300] max-h-[85dvh] overflow-y-auto rounded-t-2xl border border-zinc-800 bg-zinc-950 p-5 sm:inset-x-auto sm:right-4 sm:top-20 sm:bottom-4 sm:w-96 sm:rounded-2xl">
+      <aside className="glass-strong fixed inset-x-0 bottom-0 z-[1300] max-h-[85dvh] overflow-y-auto rounded-t-2xl border border-[var(--hair)] bg-[var(--bg-2)]/95 p-5 sm:inset-x-auto sm:right-4 sm:top-20 sm:bottom-4 sm:w-96 sm:rounded-2xl">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-zinc-100">{bar.name}</h2>
-            <p className="text-sm text-zinc-400">{bar.address}</p>
+            <p className="text-sm text-[var(--muted)]">{bar.address}</p>
           </div>
           <div className="flex items-center gap-1">
             <button
@@ -38,7 +39,10 @@ export default function BarDetail({ status, isFavorite, isLoggedIn, onToggleFavo
               aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
               aria-pressed={isFavorite}
             >
-              <span className={isFavorite ? "text-amber-400" : "text-zinc-500 hover:text-zinc-300"}>
+              <span
+                className={isFavorite ? "text-[var(--amber)]" : "text-[var(--faint)] hover:text-zinc-300"}
+                style={isFavorite ? { textShadow: "0 0 10px var(--amber)" } : undefined}
+              >
                 {isFavorite ? "★" : "☆"}
               </span>
             </button>
@@ -56,40 +60,34 @@ export default function BarDetail({ status, isFavorite, isLoggedIn, onToggleFavo
           {bar.vibe.map((v) => (
             <span
               key={v}
-              className="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-300"
+              className="rounded-full bg-white/[.07] px-2 py-0.5 text-xs text-[var(--muted)]"
             >
               {v}
             </span>
           ))}
         </div>
 
-        <section className="mt-4 rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+        <section className="glass mt-4 rounded-[var(--r-card)] p-4">
           <div className="flex items-baseline justify-between">
             <span
-              className="text-sm font-semibold"
+              className="text-sm font-semibold uppercase tracking-wide"
               style={{ color: meta.color }}
             >
               {meta.label}
             </span>
             {status.open && (
-              <span className="text-sm text-zinc-300">
+              <span className="text-sm text-[var(--muted)]">
                 <span className="text-xl font-bold tabular-nums text-zinc-100">
                   {status.count}
                 </span>
-                <span className="text-zinc-500"> / {bar.capacity} people</span>
+                <span className="text-[var(--faint)]"> / {bar.capacity} people</span>
               </span>
             )}
           </div>
           {status.open ? (
             <>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-zinc-800">
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{
-                    width: `${Math.min(100, status.ratio * 100)}%`,
-                    backgroundColor: meta.color,
-                  }}
-                />
+              <div className="mt-3">
+                <HeatMeter ratio={status.ratio} level={status.level} />
               </div>
               <div className="mt-3 flex items-end justify-between">
                 <Sparkline
@@ -139,7 +137,7 @@ export default function BarDetail({ status, isFavorite, isLoggedIn, onToggleFavo
           <h3 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
             Menu highlights
           </h3>
-          <ul className="mt-2 divide-y divide-zinc-800/70 rounded-xl border border-zinc-800 bg-zinc-900/60">
+          <ul className="glass mt-2 divide-y divide-[var(--hair)] rounded-[var(--r-card)]">
             {bar.menuHighlights.map((item) => (
               <li
                 key={item.name}

@@ -9,33 +9,34 @@ export default function EditProfileForm({ profile }: { profile: Profile }) {
 
   return (
     <form action={action} className="flex flex-col gap-3">
-      <label className="text-sm text-zinc-400">Display name</label>
+      <label className="text-sm text-[var(--muted)]">Display name</label>
       <input
         name="displayName"
         defaultValue={profile.displayName}
         required
-        className="rounded border border-zinc-700 bg-zinc-900 px-3 py-2"
+        className="glass rounded-[var(--r-control)] px-3 py-2.5 text-[var(--text)] placeholder:text-[var(--faint)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]"
       />
-      <label className="text-sm text-zinc-400">Bio</label>
+      <label className="text-sm text-[var(--muted)]">Bio</label>
       <textarea
         name="bio"
         defaultValue={profile.bio ?? ""}
         rows={3}
         maxLength={280}
-        className="rounded border border-zinc-700 bg-zinc-900 px-3 py-2"
+        className="glass rounded-[var(--r-control)] px-3 py-2.5 text-[var(--text)] placeholder:text-[var(--faint)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]"
       />
-      <label className="text-sm text-zinc-400">Avatar URL (optional)</label>
+      <label className="text-sm text-[var(--muted)]">Avatar URL (optional)</label>
       <input
         name="avatarUrl"
         defaultValue={profile.avatarUrl ?? ""}
         placeholder="https://…"
-        className="rounded border border-zinc-700 bg-zinc-900 px-3 py-2"
+        className="glass rounded-[var(--r-control)] px-3 py-2.5 text-[var(--text)] placeholder:text-[var(--faint)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]"
       />
       {state?.error && <p className="text-sm text-red-400">{state.error}</p>}
       <button
         disabled={pending}
         type="submit"
-        className="rounded bg-amber-400 px-3 py-2 font-medium text-zinc-950 disabled:opacity-50"
+        className="glow rounded-[var(--r-control)] px-3 py-2.5 font-bold text-[#06060a] transition-transform hover:scale-[1.02] disabled:opacity-50"
+        style={{ backgroundImage: "linear-gradient(135deg, var(--cyan), var(--magenta))", ["--glow" as string]: "rgba(255,45,120,.5)" }}
       >
         {pending ? "Saving…" : "Save"}
       </button>

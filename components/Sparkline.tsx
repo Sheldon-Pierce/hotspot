@@ -23,7 +23,14 @@ export default function Sparkline({ points, max, color }: SparklineProps) {
       className="overflow-visible"
       aria-label="Crowd over the last 3 hours"
     >
-      <path d={path} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" />
+      <path
+        d={path}
+        fill="none"
+        stroke={color}
+        strokeWidth={2}
+        strokeLinecap="round"
+        style={{ filter: `drop-shadow(0 0 4px ${color})` }}
+      />
     </svg>
   );
 }

@@ -1,21 +1,72 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #f4f4f5;
+  /* Neon nightlife tokens */
+  --bg: #08080d;
+  --bg-2: #0c0c16;
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-2: rgba(255, 255, 255, 0.07);
+  --hair: rgba(255, 255, 255, 0.09);
+  --text: #ececf3;
+  --muted: #9aa0b4;
+  --faint: #6b7185;
+  --magenta: #ff2d78;
+  --cyan: #22d3ee;
+  --amber: #fbbf24;
+  --green: #34d399;
+  --violet: #7c3aed;
+  --r-card: 18px;
+  --r-control: 12px;
+
+  /* Back-compat aliases */
+  --background: var(--bg);
+  --foreground: var(--text);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-bg: var(--bg);
+  --color-magenta: var(--magenta);
+  --color-cyan: var(--cyan);
+  --color-amber: var(--amber);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Neon utilities */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--hair);
+  backdrop-filter: blur(8px);
+}
+.glass-strong {
+  background: var(--surface-2);
+  border: 1px solid var(--hair);
+  backdrop-filter: blur(14px);
+}
+.neon-text {
+  text-shadow: 0 0 18px rgba(255, 45, 120, 0.6), 0 0 4px rgba(255, 45, 120, 0.85);
+}
+.glow {
+  box-shadow: 0 0 24px -6px var(--glow, rgba(255, 45, 120, 0.5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
 /* Leaflet popups/tooltips on the dark theme */
@@ -30,5 +81,10 @@ body {
 }
 
 .leaflet-container {
-  background: #18181b;
+  background: #0c0c16;
+}
+
+/* Neon glow on map crowd markers */
+.hotspot-marker {
+  filter: drop-shadow(0 0 5px currentColor);
 }

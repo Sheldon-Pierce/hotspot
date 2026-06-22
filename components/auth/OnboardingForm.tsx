@@ -12,19 +12,20 @@ export default function OnboardingForm() {
         name="username"
         placeholder="@username"
         required
-        className="rounded border border-zinc-700 bg-zinc-900 px-3 py-2"
+        className="glass rounded-[var(--r-control)] px-3 py-2.5 text-[var(--text)] placeholder:text-[var(--faint)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]"
       />
       <input
         name="displayName"
         placeholder="Display name"
         required
-        className="rounded border border-zinc-700 bg-zinc-900 px-3 py-2"
+        className="glass rounded-[var(--r-control)] px-3 py-2.5 text-[var(--text)] placeholder:text-[var(--faint)] focus:outline-none focus:ring-1 focus:ring-[var(--cyan)]"
       />
       {state?.error && <p className="text-sm text-red-400">{state.error}</p>}
       <button
         disabled={pending}
         type="submit"
-        className="rounded bg-orange-500 px-3 py-2 font-medium text-black disabled:opacity-50"
+        className="glow rounded-[var(--r-control)] px-3 py-2.5 font-bold text-[#06060a] transition-transform hover:scale-[1.02] disabled:opacity-50"
+        style={{ backgroundImage: "linear-gradient(135deg, var(--cyan), var(--magenta))", ["--glow" as string]: "rgba(255,45,120,.5)" }}
       >
         {pending ? "…" : "Continue"}
       </button>

@@ -40,8 +40,9 @@ export default function BarMap({ bars, onSelect }: BarMapProps) {
               pathOptions={{
                 color,
                 fillColor: color,
-                fillOpacity: status.open ? 0.55 : 0.25,
+                fillOpacity: status.open ? 0.7 : 0.25,
                 weight: 2,
+                className: "hotspot-marker",
               }}
               eventHandlers={{ click: () => onSelect(status.bar.id) }}
             >
@@ -63,7 +64,7 @@ export default function BarMap({ bars, onSelect }: BarMapProps) {
         })}
       </MapContainer>
 
-      <div className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-zinc-700 bg-zinc-950/85 px-3 py-2 text-xs text-zinc-300 backdrop-blur">
+      <div className="glass-strong absolute bottom-4 left-4 z-[1000] rounded-[var(--r-control)] px-3 py-2 text-xs text-zinc-300">
         {(["quiet", "warming", "buzzing", "packed"] as const).map((level) => (
           <div key={level} className="flex items-center gap-2 py-0.5">
             <span
@@ -73,7 +74,7 @@ export default function BarMap({ bars, onSelect }: BarMapProps) {
             {LEVEL_META[level].label}
           </div>
         ))}
-        <div className="mt-1 border-t border-zinc-700 pt-1 text-zinc-400">
+        <div className="mt-1 border-t border-[var(--hair)] pt-1 text-[var(--muted)]">
           🎁 = deal active
         </div>
       </div>
