@@ -62,7 +62,9 @@ export async function areFriends(a: string, b: string): Promise<boolean> {
 
 export async function searchUsers(query: string, excludeUserId: string): Promise<Profile[]> {
   const q = query.trim();
-  if (q.length === 0) return [];
+  // Require >=2 chars: a 1-char leading-wildcard ILIKE is a non-sargable full
+  // scan and a latency vector at scale.
+  if (q.length < 2) return [];
   const like = `%${q}%`;
   return db
     .select()

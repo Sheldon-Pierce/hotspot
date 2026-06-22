@@ -7,6 +7,10 @@ import { sendFriendRequest } from "@/app/actions/friends";
 
 type Found = { userId: string; username: string; displayName: string; avatarUrl: string | null };
 
+// Terminal states that should disable the Add button; "error" stays enabled so
+// the user can retry, and is surfaced as a label rather than a dead-end.
+const DONE = new Set(["requested", "already-requested", "accepted", "already-friends"]);
+
 function label(status: string | undefined): string {
   switch (status) {
     case "requested":
@@ -15,6 +19,8 @@ function label(status: string | undefined): string {
     case "accepted":
     case "already-friends":
       return "Friends";
+    case "error":
+      return "Try again";
     default:
       return "Add";
   }
@@ -59,7 +65,7 @@ export default function UserSearch() {
             </Link>
             <button
               onClick={() => add(u.userId)}
-              disabled={!!statuses[u.userId]}
+              disabled={DONE.has(statuses[u.userId] ?? "")}
               className="ml-auto rounded-lg bg-amber-400 px-3 py-1 text-sm font-medium text-zinc-950 disabled:opacity-60"
             >
               {label(statuses[u.userId])}

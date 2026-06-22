@@ -59,6 +59,15 @@ do not hand-edit) + `profile`, `favorite`, `checkin`, `friendship`, `badge`,
   unique index, or `pg_advisory_xact_lock(hash(userId, barId))` at the top of the
   transaction. Surfaced in the Phase 1B review.
 
+- **`sendFriendRequest` TOCTOU race** (`app/actions/friends.ts`): the existing-row
+  SELECT and the INSERT/UPDATE aren't atomic, so simultaneous `A→B` and `B→A` requests
+  can both insert, leaving a stale pending inverse row (the PK `(requester,addressee)`
+  treats the inverse as a distinct legal row, so `onConflictDoNothing` doesn't collapse
+  it). Harmless (both stay pending → `areFriends` false; the next request auto-accepts
+  one), just a ghost request row. Proper fix needs canonical-pair ordering or an advisory
+  lock, not just a transaction (cross-request race under READ COMMITTED). Surfaced in the
+  Phase 1C review.
+
 ## Still open (decided by the product owner)
 
 - **Email verification:** spec §7 requires it for email/password; Phase 0 left
