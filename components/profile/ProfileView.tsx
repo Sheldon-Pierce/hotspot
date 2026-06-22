@@ -4,15 +4,17 @@ import BadgeCase from "@/components/profile/BadgeCase";
 import FavoriteBars from "@/components/profile/FavoriteBars";
 import type { BadgeDef } from "@/lib/gamification/badges";
 import type { Profile } from "@/lib/profile/queries";
+import { levelForPoints } from "@/lib/gamification/engine";
 
 interface ProfileViewProps {
   profile: Profile;
   badges: BadgeDef[];
   favoriteBarIds: string[];
+  checkins: { totalCheckins: number; distinctBars: number };
   isOwner: boolean;
 }
 
-export default function ProfileView({ profile, badges, favoriteBarIds, isOwner }: ProfileViewProps) {
+export default function ProfileView({ profile, badges, favoriteBarIds, checkins, isOwner }: ProfileViewProps) {
   const memberSince = profile.createdAt.toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
@@ -37,9 +39,18 @@ export default function ProfileView({ profile, badges, favoriteBarIds, isOwner }
 
       {profile.bio && <p className="text-zinc-300">{profile.bio}</p>}
 
-      <div className="flex flex-wrap gap-6 text-sm">
+      <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <span className="text-amber-400">
+          Level <span className="font-bold tabular-nums">{levelForPoints(profile.points)}</span>
+        </span>
         <span className="text-amber-400">
           <span className="font-bold tabular-nums">{profile.points}</span> points
+        </span>
+        <span className="text-zinc-400">
+          <span className="font-bold tabular-nums text-zinc-200">{checkins.totalCheckins}</span> check-ins
+        </span>
+        <span className="text-zinc-400">
+          <span className="font-bold tabular-nums text-zinc-200">{checkins.distinctBars}</span> bars visited
         </span>
         <span className="text-zinc-400">
           <span className="font-bold tabular-nums text-zinc-200">{favoriteBarIds.length}</span> favorites

@@ -4,6 +4,7 @@ import {
   getProfileByUsername,
   getEarnedBadges,
   getFavoriteBarIds,
+  getCheckinSummary,
 } from "@/lib/profile/queries";
 import ProfileView from "@/components/profile/ProfileView";
 
@@ -17,10 +18,11 @@ export default async function PublicProfilePage({
   const profile = await getProfileByUsername(username.toLowerCase());
   if (!profile) notFound();
 
-  const [badges, favoriteBarIds, session] = await Promise.all([
+  const [badges, favoriteBarIds, session, checkins] = await Promise.all([
     getEarnedBadges(profile.userId),
     getFavoriteBarIds(profile.userId),
     getSession(),
+    getCheckinSummary(profile.userId),
   ]);
   const isOwner = session?.user?.id === profile.userId;
 
@@ -29,6 +31,7 @@ export default async function PublicProfilePage({
       profile={profile}
       badges={badges}
       favoriteBarIds={favoriteBarIds}
+      checkins={checkins}
       isOwner={isOwner}
     />
   );
