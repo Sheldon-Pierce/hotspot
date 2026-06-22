@@ -1,7 +1,7 @@
 import "server-only";
-import { and, or, eq, ne, ilike, inArray } from "drizzle-orm";
+import { and, or, eq, ne, ilike, inArray, desc } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { friendship, profile } from "@/lib/db/schema";
+import { friendship, profile, checkin } from "@/lib/db/schema";
 import type { Profile } from "@/lib/profile/queries";
 
 async function profilesByIds(ids: string[]): Promise<Profile[]> {
@@ -74,4 +74,32 @@ export async function searchUsers(query: string, excludeUserId: string): Promise
       ),
     )
     .limit(20);
+}
+
+export interface FeedItem {
+  id: string;
+  username: string;
+  displayName: string;
+  avatarUrl: string | null;
+  barId: string;
+  createdAt: Date;
+}
+
+export async function getFriendsFeed(userId: string): Promise<FeedItem[]> {
+  const friendIds = await getFriendIds(userId);
+  if (friendIds.length === 0) return [];
+  return db
+    .select({
+      id: checkin.id,
+      username: profile.username,
+      displayName: profile.displayName,
+      avatarUrl: profile.avatarUrl,
+      barId: checkin.barId,
+      createdAt: checkin.createdAt,
+    })
+    .from(checkin)
+    .innerJoin(profile, eq(checkin.userId, profile.userId))
+    .where(inArray(checkin.userId, friendIds))
+    .orderBy(desc(checkin.createdAt))
+    .limit(50);
 }
