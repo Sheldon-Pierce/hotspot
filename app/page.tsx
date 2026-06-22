@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import BarList from "@/components/BarList";
 import BarDetail from "@/components/BarDetail";
 import { useBars } from "@/lib/useBars";
+import { useFavorites } from "@/lib/useFavorites";
 
 // Leaflet touches `window`, so the map can only render client-side.
 const BarMap = dynamic(() => import("@/components/BarMap"), {
@@ -23,6 +24,7 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const { data, error } = useBars(preset);
+  const { favorites, toggle } = useFavorites();
   const selected = data?.bars.find((b) => b.bar.id === selectedId) ?? null;
 
   return (
@@ -48,13 +50,23 @@ export default function Home() {
 
       {data &&
         (view === "list" ? (
-          <BarList bars={data.bars} onSelect={setSelectedId} />
+          <BarList
+            bars={data.bars}
+            favorites={favorites}
+            onSelect={setSelectedId}
+            onToggleFavorite={toggle}
+          />
         ) : (
           <BarMap bars={data.bars} onSelect={setSelectedId} />
         ))}
 
       {selected && (
-        <BarDetail status={selected} onClose={() => setSelectedId(null)} />
+        <BarDetail
+          status={selected}
+          isFavorite={favorites.has(selected.bar.id)}
+          onToggleFavorite={toggle}
+          onClose={() => setSelectedId(null)}
+        />
       )}
     </div>
   );

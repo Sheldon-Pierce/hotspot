@@ -7,6 +7,7 @@ import { requireSession, getCurrentProfile } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { profile } from "@/lib/db/schema";
 import { usernameSchema } from "@/lib/profile/username";
+import { profileEditSchema } from "@/lib/profile/profile-input";
 
 const schema = z.object({
   username: usernameSchema,
@@ -54,6 +55,33 @@ export async function createProfile(
     if (constraint === "profile_pkey") redirect("/profile");
     return { error: "That username is taken." };
   }
+
+  redirect("/profile");
+}
+
+export async function updateProfile(
+  _prev: { error?: string } | undefined,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const session = await requireSession();
+
+  const parsed = profileEditSchema.safeParse({
+    displayName: formData.get("displayName"),
+    bio: formData.get("bio"),
+    avatarUrl: formData.get("avatarUrl"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid input." };
+  }
+
+  await db
+    .update(profile)
+    .set({
+      displayName: parsed.data.displayName,
+      bio: parsed.data.bio,
+      avatarUrl: parsed.data.avatarUrl,
+    })
+    .where(eq(profile.userId, session.user.id));
 
   redirect("/profile");
 }
