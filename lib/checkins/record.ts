@@ -36,6 +36,19 @@ export async function recordCheckIn(
 ): Promise<CheckInResult> {
   if (!isValidBarId(barId)) return { status: "error", message: "Unknown bar." };
 
+  // Must be onboarded (have a profile) to earn points. Guard BEFORE the
+  // transaction so an authenticated-but-not-onboarded user writes nothing —
+  // otherwise the profile points-bump matches 0 rows and we'd leave orphan
+  // checkin/ledger/badge rows while reporting points that never persisted.
+  const prof = await db
+    .select({ userId: profile.userId })
+    .from(profile)
+    .where(eq(profile.userId, userId))
+    .limit(1);
+  if (prof.length === 0) {
+    return { status: "error", message: "Finish setting up your profile first." };
+  }
+
   return db.transaction(async (tx): Promise<CheckInResult> => {
     // Cooldown: most recent check-in at this bar.
     const last = await tx

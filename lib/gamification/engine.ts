@@ -1,8 +1,11 @@
 export const POINTS = { checkin: 10, newBar: 15 } as const;
 export const COOLDOWN_MS = 2 * 60 * 60 * 1000; // 2 hours
 
-export function checkinPoints(isNewBar: boolean): { amount: number; reason: string }[] {
-  const entries: { amount: number; reason: string }[] = [
+/** Source of truth for points_ledger.reason values (Team D filters on these). */
+export type PointsReason = "checkin" | "new-bar";
+
+export function checkinPoints(isNewBar: boolean): { amount: number; reason: PointsReason }[] {
+  const entries: { amount: number; reason: PointsReason }[] = [
     { amount: POINTS.checkin, reason: "checkin" },
   ];
   if (isNewBar) entries.push({ amount: POINTS.newBar, reason: "new-bar" });
