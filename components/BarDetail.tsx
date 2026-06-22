@@ -6,10 +6,12 @@ import Sparkline from "@/components/Sparkline";
 
 interface BarDetailProps {
   status: BarStatus;
+  isFavorite: boolean;
+  onToggleFavorite: (barId: string) => void;
   onClose: () => void;
 }
 
-export default function BarDetail({ status, onClose }: BarDetailProps) {
+export default function BarDetail({ status, isFavorite, onToggleFavorite, onClose }: BarDetailProps) {
   const { bar } = status;
   const meta = LEVEL_META[status.level];
   const trendMeta = TREND_META[status.trend];
@@ -27,13 +29,25 @@ export default function BarDetail({ status, onClose }: BarDetailProps) {
             <h2 className="text-lg font-bold text-zinc-100">{bar.name}</h2>
             <p className="text-sm text-zinc-400">{bar.address}</p>
           </div>
-          <button
-            onClick={onClose}
-            className="rounded-full p-1 text-zinc-400 hover:bg-zinc-800 hover:text-white"
-            aria-label="Close"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => onToggleFavorite(bar.id)}
+              className="rounded-full p-1 text-xl leading-none"
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              aria-pressed={isFavorite}
+            >
+              <span className={isFavorite ? "text-amber-400" : "text-zinc-500 hover:text-zinc-300"}>
+                {isFavorite ? "★" : "☆"}
+              </span>
+            </button>
+            <button
+              onClick={onClose}
+              className="rounded-full p-1 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="mt-2 flex flex-wrap gap-1.5">
