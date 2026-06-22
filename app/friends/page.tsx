@@ -16,7 +16,7 @@ export default async function FriendsPage() {
   return (
     <main className="mx-auto flex max-w-2xl flex-col gap-8 px-4 py-10">
       <section className="flex flex-col gap-3">
-        <h1 className="text-2xl font-bold">Friends</h1>
+        <h1 className="neon-text text-2xl font-extrabold text-white">Friends</h1>
         <UserSearch />
       </section>
 
@@ -27,11 +27,11 @@ export default async function FriendsPage() {
           </h2>
           <ul className="flex flex-col gap-2">
             {incoming.map((p) => (
-              <li key={p.userId} className="flex items-center gap-3">
+              <li key={p.userId} className="glass flex items-center gap-3 rounded-[var(--r-card)] p-3">
                 <Avatar name={p.displayName} src={p.avatarUrl} size={36} />
                 <div className="min-w-0">
                   <span className="block truncate text-sm font-medium text-zinc-100">{p.displayName}</span>
-                  <span className="block truncate text-xs text-zinc-400">@{p.username}</span>
+                  <span className="block truncate text-xs text-[var(--muted)]">@{p.username}</span>
                 </div>
                 <div className="ml-auto">
                   <RequestActions requesterId={p.userId} />
@@ -51,11 +51,11 @@ export default async function FriendsPage() {
         ) : (
           <ul className="flex flex-col gap-2">
             {friends.map((p) => (
-              <li key={p.userId} className="flex items-center gap-3">
+              <li key={p.userId} className="glass flex items-center gap-3 rounded-[var(--r-card)] p-3">
                 <Avatar name={p.displayName} src={p.avatarUrl} size={36} />
                 <Link href={`/u/${p.username}`} className="min-w-0">
                   <span className="block truncate text-sm font-medium text-zinc-100">{p.displayName}</span>
-                  <span className="block truncate text-xs text-zinc-400">@{p.username}</span>
+                  <span className="block truncate text-xs text-[var(--muted)]">@{p.username}</span>
                 </Link>
                 <div className="ml-auto">
                   <RemoveFriendButton userId={p.userId} />

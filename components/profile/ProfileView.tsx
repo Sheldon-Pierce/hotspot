@@ -31,16 +31,16 @@ export default function ProfileView({
   });
   return (
     <main className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-10">
-      <header className="flex items-center gap-4">
-        <Avatar name={profile.displayName} src={profile.avatarUrl} size={72} />
+      <header className="glass flex items-center gap-4 rounded-[var(--r-card)] p-5">
+        <Avatar name={profile.displayName} src={profile.avatarUrl} size={72} ring />
         <div className="min-w-0">
           <h1 className="truncate text-2xl font-bold text-zinc-100">{profile.displayName}</h1>
-          <p className="text-zinc-400">@{profile.username}</p>
+          <p className="text-[var(--muted)]">@{profile.username}</p>
         </div>
         {isOwner && (
           <Link
             href="/profile/edit"
-            className="ml-auto shrink-0 rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-200 hover:border-zinc-500"
+            className="glass ml-auto shrink-0 rounded-[var(--r-control)] px-3 py-1.5 text-sm text-zinc-200 hover:border-white/20"
           >
             Edit
           </Link>
@@ -49,23 +49,23 @@ export default function ProfileView({
 
       {profile.bio && <p className="text-zinc-300">{profile.bio}</p>}
 
-      <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <span className="text-amber-400">
+      <div className="flex flex-wrap gap-2 text-sm">
+        <span className="glass rounded-full px-3 py-1 text-[var(--amber)]" style={{ ["--glow" as string]: "rgba(251,191,36,.4)" }}>
           Level <span className="font-bold tabular-nums">{levelForPoints(profile.points)}</span>
         </span>
-        <span className="text-amber-400">
-          <span className="font-bold tabular-nums">{profile.points}</span> points
+        <span className="glass rounded-full px-3 py-1 text-[var(--amber)]">
+          <span className="font-bold tabular-nums">{profile.points}</span> pts
         </span>
-        <span className="text-zinc-400">
+        <span className="glass rounded-full px-3 py-1 text-[var(--muted)]">
           <span className="font-bold tabular-nums text-zinc-200">{checkins.totalCheckins}</span> check-ins
         </span>
-        <span className="text-zinc-400">
-          <span className="font-bold tabular-nums text-zinc-200">{checkins.distinctBars}</span> bars visited
+        <span className="glass rounded-full px-3 py-1 text-[var(--muted)]">
+          <span className="font-bold tabular-nums text-zinc-200">{checkins.distinctBars}</span> bars
         </span>
-        <span className="text-zinc-400">
+        <span className="glass rounded-full px-3 py-1 text-[var(--muted)]">
           <span className="font-bold tabular-nums text-zinc-200">{favoriteBarIds.length}</span> favorites
         </span>
-        <span className="text-zinc-500">Member since {memberSince}</span>
+        <span className="px-1 py-1 text-[var(--faint)]">Member since {memberSince}</span>
       </div>
 
       <section className="flex flex-col gap-2">
