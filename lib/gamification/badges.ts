@@ -18,5 +18,5 @@ export const BADGES: BadgeDef[] = [
   { key: "night-owl", name: "Night Owl", icon: "🦉",
     description: "Checked in after midnight.", criteria: "check-in hour >= 0 and < 4" },
   { key: "neighborhood-champ", name: "Neighborhood Champ", icon: "👑",
-    description: "Most points at a bar.", criteria: "top of a bar leaderboard" },
+    description: "#1 on the all-time neighborhood leaderboard.", criteria: "all-time #1 by total points" },
 ];
