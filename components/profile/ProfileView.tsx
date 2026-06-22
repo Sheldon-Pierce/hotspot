@@ -2,8 +2,10 @@ import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import BadgeCase from "@/components/profile/BadgeCase";
 import FavoriteBars from "@/components/profile/FavoriteBars";
+import RecentCheckins from "@/components/profile/RecentCheckins";
 import type { BadgeDef } from "@/lib/gamification/badges";
 import type { Profile } from "@/lib/profile/queries";
+import type { FeedItem } from "@/lib/friends/queries";
 import { levelForPoints } from "@/lib/gamification/engine";
 
 interface ProfileViewProps {
@@ -11,10 +13,18 @@ interface ProfileViewProps {
   badges: BadgeDef[];
   favoriteBarIds: string[];
   checkins: { totalCheckins: number; distinctBars: number };
+  recentCheckins: { visible: boolean; items: FeedItem[] };
   isOwner: boolean;
 }
 
-export default function ProfileView({ profile, badges, favoriteBarIds, checkins, isOwner }: ProfileViewProps) {
+export default function ProfileView({
+  profile,
+  badges,
+  favoriteBarIds,
+  checkins,
+  recentCheckins,
+  isOwner,
+}: ProfileViewProps) {
   const memberSince = profile.createdAt.toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
@@ -66,6 +76,11 @@ export default function ProfileView({ profile, badges, favoriteBarIds, checkins,
       <section className="flex flex-col gap-2">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Favorite bars</h2>
         <FavoriteBars barIds={favoriteBarIds} />
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Recent check-ins</h2>
+        <RecentCheckins visible={recentCheckins.visible} items={recentCheckins.items} />
       </section>
     </main>
   );

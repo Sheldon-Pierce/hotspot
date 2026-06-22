@@ -18,6 +18,12 @@ export default function UserMenu() {
 
   return (
     <div className="flex items-center gap-3 text-sm">
+      <Link href="/feed" className="font-medium text-zinc-200">
+        Feed
+      </Link>
+      <Link href="/friends" className="font-medium text-zinc-200">
+        Friends
+      </Link>
       <Link href="/profile" className="font-medium text-zinc-200">
         Profile
       </Link>

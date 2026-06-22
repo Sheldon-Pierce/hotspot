@@ -103,3 +103,33 @@ export async function getFriendsFeed(userId: string): Promise<FeedItem[]> {
     .orderBy(desc(checkin.createdAt))
     .limit(50);
 }
+
+/**
+ * Recent check-ins for a profile, visible only to the owner or accepted
+ * friends. `visible: false` means the viewer isn't allowed to see them.
+ */
+export async function getVisibleCheckins(
+  profileUserId: string,
+  viewerUserId: string | null,
+): Promise<{ visible: boolean; items: FeedItem[] }> {
+  const isSelf = viewerUserId === profileUserId;
+  const visible =
+    isSelf || (viewerUserId !== null && (await areFriends(viewerUserId, profileUserId)));
+  if (!visible) return { visible: false, items: [] };
+
+  const items = await db
+    .select({
+      id: checkin.id,
+      username: profile.username,
+      displayName: profile.displayName,
+      avatarUrl: profile.avatarUrl,
+      barId: checkin.barId,
+      createdAt: checkin.createdAt,
+    })
+    .from(checkin)
+    .innerJoin(profile, eq(checkin.userId, profile.userId))
+    .where(eq(checkin.userId, profileUserId))
+    .orderBy(desc(checkin.createdAt))
+    .limit(10);
+  return { visible: true, items };
+}
