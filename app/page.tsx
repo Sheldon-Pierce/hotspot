@@ -24,7 +24,7 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const { data, error } = useBars(preset);
-  const { favorites, toggle } = useFavorites();
+  const { favorites, toggle, isLoggedIn } = useFavorites();
   const selected = data?.bars.find((b) => b.bar.id === selectedId) ?? null;
 
   return (
@@ -64,6 +64,7 @@ export default function Home() {
         <BarDetail
           status={selected}
           isFavorite={favorites.has(selected.bar.id)}
+          isLoggedIn={isLoggedIn}
           onToggleFavorite={toggle}
           onClose={() => setSelectedId(null)}
         />

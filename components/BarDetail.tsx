@@ -3,15 +3,17 @@
 import type { BarStatus } from "@/lib/types";
 import { LEVEL_META, TREND_META } from "@/lib/ui";
 import Sparkline from "@/components/Sparkline";
+import CheckInButton from "@/components/CheckInButton";
 
 interface BarDetailProps {
   status: BarStatus;
   isFavorite: boolean;
+  isLoggedIn: boolean;
   onToggleFavorite: (barId: string) => void;
   onClose: () => void;
 }
 
-export default function BarDetail({ status, isFavorite, onToggleFavorite, onClose }: BarDetailProps) {
+export default function BarDetail({ status, isFavorite, isLoggedIn, onToggleFavorite, onClose }: BarDetailProps) {
   const { bar } = status;
   const meta = LEVEL_META[status.level];
   const trendMeta = TREND_META[status.trend];
@@ -154,6 +156,8 @@ export default function BarDetail({ status, isFavorite, onToggleFavorite, onClos
             </p>
           )}
         </section>
+
+        <CheckInButton barId={bar.id} isLoggedIn={isLoggedIn} />
 
         {bar.website ? (
           <a

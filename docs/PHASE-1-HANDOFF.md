@@ -49,6 +49,16 @@ do not hand-edit) + `profile`, `favorite`, `checkin`, `friendship`, `badge`,
    Phase 2 will use these to verify presence and feed live crowd counts — keep
    check-in writes populating them where available.
 
+## Known follow-ups (tracked)
+
+- **Check-in cooldown is racy under concurrent double-submit** (`lib/checkins/record.ts`):
+  the cooldown is a read-then-write at READ COMMITTED with no lock, so two
+  near-simultaneous check-ins at the same bar can both pass the 2h check and
+  double-score. Low impact (a fast double-click; the button is `pending`-guarded
+  client-side). Fix when convenient: `SELECT … FOR UPDATE`, a coarse time-bucket
+  unique index, or `pg_advisory_xact_lock(hash(userId, barId))` at the top of the
+  transaction. Surfaced in the Phase 1B review.
+
 ## Still open (decided by the product owner)
 
 - **Email verification:** spec §7 requires it for email/password; Phase 0 left

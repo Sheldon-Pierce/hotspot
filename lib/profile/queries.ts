@@ -1,7 +1,7 @@
 import "server-only";
-import { eq } from "drizzle-orm";
+import { eq, count, countDistinct } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { profile, favorite, userBadge } from "@/lib/db/schema";
+import { profile, favorite, userBadge, checkin } from "@/lib/db/schema";
 import { BADGES, type BadgeDef } from "@/lib/gamification/badges";
 
 export type Profile = typeof profile.$inferSelect;
@@ -26,4 +26,17 @@ export async function getEarnedBadges(userId: string): Promise<BadgeDef[]> {
     .where(eq(userBadge.userId, userId));
   const earned = new Set(rows.map((r) => r.key));
   return BADGES.filter((b) => earned.has(b.key));
+}
+
+export async function getCheckinSummary(
+  userId: string,
+): Promise<{ totalCheckins: number; distinctBars: number }> {
+  const [total, distinct] = await Promise.all([
+    db.select({ n: count() }).from(checkin).where(eq(checkin.userId, userId)),
+    db.select({ n: countDistinct(checkin.barId) }).from(checkin).where(eq(checkin.userId, userId)),
+  ]);
+  return {
+    totalCheckins: Number(total[0]?.n ?? 0),
+    distinctBars: Number(distinct[0]?.n ?? 0),
+  };
 }
