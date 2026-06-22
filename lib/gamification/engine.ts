@@ -33,6 +33,7 @@ export interface BadgeStats {
   distinctBars: number;
   maxCheckinsAtOneBar: number;
   isNightOwl: boolean;
+  isNeighborhoodChamp: boolean;
 }
 
 /** Badge keys earned at these stats. Keys match lib/gamification/badges.ts. */
@@ -43,5 +44,6 @@ export function evaluateBadges(s: BadgeStats): string[] {
   if (s.distinctBars >= 10) earned.push("explorer-10");
   if (s.maxCheckinsAtOneBar >= 10) earned.push("regular");
   if (s.isNightOwl) earned.push("night-owl");
+  if (s.isNeighborhoodChamp) earned.push("neighborhood-champ");
   return earned;
 }

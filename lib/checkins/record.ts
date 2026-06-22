@@ -93,6 +93,11 @@ export async function recordCheckIn(
       .returning({ points: profile.points });
     const totalPoints = updated[0]?.points ?? pointsEarned;
 
+    // All-time #1 by total points → Neighborhood Champ (ties: all leaders earn it).
+    // profile.points was bumped above in this same transaction, so the max reflects it.
+    const maxRow = await tx.select({ max: sql<number>`max(${profile.points})` }).from(profile);
+    const isNeighborhoodChamp = totalPoints > 0 && totalPoints >= Number(maxRow[0]?.max ?? 0);
+
     // Stats (including this check-in) for badge evaluation.
     const [totalRow, distinctRow, perBar] = await Promise.all([
       tx.select({ n: count() }).from(checkin).where(eq(checkin.userId, userId)),
@@ -109,6 +114,7 @@ export async function recordCheckIn(
       distinctBars: Number(distinctRow[0]?.n ?? 0),
       maxCheckinsAtOneBar: maxAtOneBar,
       isNightOwl: isNightOwlHour(pacificHour(now)),
+      isNeighborhoodChamp,
     });
 
     // Award not-yet-earned badges; report only the newly earned ones.
