@@ -31,7 +31,8 @@ export default function CheckInButton({ barId, isLoggedIn }: { barId: string; is
       <button
         onClick={onClick}
         disabled={pending}
-        className="w-full rounded-xl bg-emerald-500 px-4 py-2.5 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-50"
+        className="glow w-full rounded-[var(--r-card)] px-4 py-2.5 font-bold text-[#06060a] transition-transform hover:scale-[1.02] disabled:opacity-50"
+        style={{ backgroundImage: "linear-gradient(135deg, var(--cyan), var(--magenta))", ["--glow" as string]: "rgba(255,45,120,.55)" }}
       >
         {pending ? "Checking in…" : "📍 I'm here — check in"}
       </button>
