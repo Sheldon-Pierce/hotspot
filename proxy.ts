@@ -4,25 +4,30 @@ import { NextRequest, NextResponse } from "next/server";
 // root). This is an OPTIMISTIC auth gate only — it checks for the presence of
 // a Better Auth session cookie to pre-filter requests. The authoritative check
 // lives in the Data Access Layer (lib/dal.ts requireSession), which every
-// protected page/route/action calls.
+// page/route/action that reads user data calls.
 
-const protectedRoutes = ["/profile", "/friends", "/feed", "/leaderboard", "/onboarding"];
+// The whole app sits behind auth: every page requires a session EXCEPT the
+// auth screens. (The `api`, static-asset, and `_next` paths are excluded by
+// the matcher below, so `/api/auth/*` and `/api/bars` stay reachable.)
 const authRoutes = ["/login", "/signup"];
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Better Auth session cookie is `better-auth.session_token`, with a
-  // `__Secure-` prefix in secure contexts — match both.
+  // `__Secure-` prefix in secure (https) contexts — match both.
   const hasSession = req.cookies
     .getAll()
     .some((c) => c.name.endsWith("better-auth.session_token"));
+  const isAuthRoute = authRoutes.some((r) => pathname.startsWith(r));
 
-  if (protectedRoutes.some((r) => pathname.startsWith(r)) && !hasSession) {
+  // Not logged in + not on an auth screen → send to login.
+  if (!hasSession && !isAuthRoute) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
-  if (authRoutes.some((r) => pathname.startsWith(r)) && hasSession) {
-    return NextResponse.redirect(new URL("/profile", req.nextUrl));
+  // Logged in + on an auth screen → send into the app.
+  if (hasSession && isAuthRoute) {
+    return NextResponse.redirect(new URL("/", req.nextUrl));
   }
   return NextResponse.next();
 }
