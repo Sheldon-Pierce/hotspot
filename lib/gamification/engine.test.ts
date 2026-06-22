@@ -54,18 +54,23 @@ describe("isNightOwlHour", () => {
 
 describe("evaluateBadges", () => {
   it("awards first-round on the first check-in", () => {
-    expect(evaluateBadges({ totalCheckins: 1, distinctBars: 1, maxCheckinsAtOneBar: 1, isNightOwl: false }))
-      .toEqual(["first-round"]);
+    expect(
+      evaluateBadges({ totalCheckins: 1, distinctBars: 1, maxCheckinsAtOneBar: 1, isNightOwl: false, isNeighborhoodChamp: false }),
+    ).toEqual(["first-round"]);
   });
   it("awards explorer tiers by distinct bars", () => {
-    const r = evaluateBadges({ totalCheckins: 5, distinctBars: 5, maxCheckinsAtOneBar: 1, isNightOwl: false });
+    const r = evaluateBadges({ totalCheckins: 5, distinctBars: 5, maxCheckinsAtOneBar: 1, isNightOwl: false, isNeighborhoodChamp: false });
     expect(r).toContain("explorer-5");
     expect(r).not.toContain("explorer-10");
   });
   it("awards regular at 10 at one bar and night-owl when flagged", () => {
-    const r = evaluateBadges({ totalCheckins: 12, distinctBars: 10, maxCheckinsAtOneBar: 10, isNightOwl: true });
+    const r = evaluateBadges({ totalCheckins: 12, distinctBars: 10, maxCheckinsAtOneBar: 10, isNightOwl: true, isNeighborhoodChamp: false });
     expect(r).toEqual(
       expect.arrayContaining(["first-round", "explorer-5", "explorer-10", "regular", "night-owl"]),
     );
+  });
+  it("awards neighborhood-champ when flagged", () => {
+    const r = evaluateBadges({ totalCheckins: 1, distinctBars: 1, maxCheckinsAtOneBar: 1, isNightOwl: false, isNeighborhoodChamp: true });
+    expect(r).toContain("neighborhood-champ");
   });
 });

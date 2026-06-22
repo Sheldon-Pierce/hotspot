@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 // lives in the Data Access Layer (lib/dal.ts requireSession), which every
 // protected page/route/action calls.
 
-const protectedRoutes = ["/profile", "/friends", "/feed", "/onboarding"];
+const protectedRoutes = ["/profile", "/friends", "/feed", "/leaderboard", "/onboarding"];
 const authRoutes = ["/login", "/signup"];
 
 export function proxy(req: NextRequest) {

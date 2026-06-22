@@ -24,6 +24,9 @@ export default function UserMenu() {
       <Link href="/friends" className="font-medium text-zinc-200">
         Friends
       </Link>
+      <Link href="/leaderboard" className="font-medium text-zinc-200">
+        Leaderboard
+      </Link>
       <Link href="/profile" className="font-medium text-zinc-200">
         Profile
       </Link>
