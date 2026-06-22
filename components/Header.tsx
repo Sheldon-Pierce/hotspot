@@ -1,6 +1,7 @@
 "use client";
 
 import { TIME_PRESETS } from "@/lib/presets";
+import UserMenu from "@/components/auth/UserMenu";
 
 interface HeaderProps {
   view: "list" | "map";
@@ -58,6 +59,8 @@ export default function Header({
             </button>
           ))}
         </div>
+
+        <UserMenu />
       </div>
     </header>
   );

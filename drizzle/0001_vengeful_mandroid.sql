@@ -1,0 +1,1 @@
+ALTER TABLE "points_ledger" ADD CONSTRAINT "points_ledger_checkin_id_checkin_id_fk" FOREIGN KEY ("checkin_id") REFERENCES "public"."checkin"("id") ON DELETE set null ON UPDATE no action;
