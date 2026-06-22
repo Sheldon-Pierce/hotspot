@@ -17,6 +17,7 @@ export async function toggleFavorite(barId: string): Promise<{ favorited: boolea
     await db.delete(favorite).where(where);
     return { favorited: false };
   }
-  await db.insert(favorite).values({ userId: session.user.id, barId });
+  // onConflictDoNothing: a concurrent double-submit can't throw a spurious 23505.
+  await db.insert(favorite).values({ userId: session.user.id, barId }).onConflictDoNothing();
   return { favorited: true };
 }

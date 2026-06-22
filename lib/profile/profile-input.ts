@@ -10,6 +10,7 @@ export const profileEditSchema = z.object({
     emptyToNull,
     z
       .url("Avatar URL must be a valid URL.")
+      .max(2048, "Avatar URL is too long.")
       .refine((u) => /^https?:\/\//.test(u), "Avatar URL must start with http(s)://")
       .nullable(),
   ),
