@@ -81,5 +81,10 @@ body {
 }
 
 .leaflet-container {
-  background: #18181b;
+  background: #0c0c16;
+}
+
+/* Neon glow on map crowd markers */
+.hotspot-marker {
+  filter: drop-shadow(0 0 5px currentColor);
 }

@@ -15,19 +15,24 @@ export default function Header({
   preset,
   onPresetChange,
 }: HeaderProps) {
+  const isLive = preset === null;
   return (
-    <div className="border-b border-zinc-800 bg-zinc-950/80">
+    <div className="relative z-[1] border-b border-[var(--hair)]">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-2.5">
-        <p className="mr-auto text-xs text-zinc-400">
-          live bar crowds &middot; Ballard, Seattle
-        </p>
+        <span className="mr-auto inline-flex items-center gap-2 text-xs text-[var(--muted)]">
+          <span
+            className={`h-2 w-2 rounded-full ${isLive ? "animate-pulse" : ""}`}
+            style={{ background: isLive ? "var(--green)" : "var(--faint)", boxShadow: isLive ? "0 0 8px var(--green)" : "none" }}
+          />
+          {isLive ? "Live now" : "Time-travel"} &middot; Ballard, Seattle
+        </span>
 
         <select
           value={preset ?? "live"}
           onChange={(e) =>
             onPresetChange(e.target.value === "live" ? null : e.target.value)
           }
-          className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-zinc-200"
+          className="glass rounded-[var(--r-control)] px-3 py-1.5 text-sm text-[var(--text)]"
           aria-label="Time"
         >
           <option value="live">● Live now</option>
@@ -38,16 +43,17 @@ export default function Header({
           ))}
         </select>
 
-        <div className="flex rounded-lg border border-zinc-700 bg-zinc-900 p-0.5 text-sm">
+        <div className="glass flex rounded-[var(--r-control)] p-0.5 text-sm">
           {(["list", "map"] as const).map((v) => (
             <button
               key={v}
               onClick={() => onViewChange(v)}
               className={`rounded-md px-4 py-1 capitalize transition-colors ${
                 view === v
-                  ? "bg-amber-400 font-semibold text-zinc-950"
-                  : "text-zinc-300 hover:text-white"
+                  ? "font-semibold text-[#06060a]"
+                  : "text-[var(--muted)] hover:text-white"
               }`}
+              style={view === v ? { background: "var(--amber)", boxShadow: "0 0 16px -2px var(--amber)" } : undefined}
             >
               {v}
             </button>
