@@ -5,11 +5,11 @@ export const LEVEL_META: Record<
   CrowdLevel,
   { label: string; color: string; description: string }
 > = {
-  closed: { label: "Closed", color: "#52525b", description: "Come back later" },
-  quiet: { label: "Quiet", color: "#34d399", description: "Deals likely active" },
-  warming: { label: "Warming up", color: "#facc15", description: "Good time to grab a seat" },
-  buzzing: { label: "Buzzing", color: "#fb923c", description: "Lively crowd" },
-  packed: { label: "Packed", color: "#f87171", description: "Expect a wait" },
+  closed: { label: "Closed", color: "#6b7185", description: "Come back later" },
+  quiet: { label: "Quiet", color: "#22d3ee", description: "Deals likely active" },
+  warming: { label: "Warming up", color: "#5eead4", description: "Good time to grab a seat" },
+  buzzing: { label: "Buzzing", color: "#fbbf24", description: "Lively crowd" },
+  packed: { label: "Packed", color: "#ff2d78", description: "Expect a wait" },
 };
 
 export const TREND_META: Record<Trend, { icon: string; label: string }> = {
