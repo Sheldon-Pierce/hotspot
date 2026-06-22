@@ -7,6 +7,7 @@ import BarList from "@/components/BarList";
 import BarDetail from "@/components/BarDetail";
 import { useBars } from "@/lib/useBars";
 import { useFavorites } from "@/lib/useFavorites";
+import AuroraBg from "@/components/AuroraBg";
 
 // Leaflet touches `window`, so the map can only render client-side.
 const BarMap = dynamic(() => import("@/components/BarMap"), {
@@ -29,12 +30,15 @@ export default function Home() {
 
   return (
     <div className="min-h-dvh">
-      <Header
-        view={view}
-        onViewChange={setView}
-        preset={preset}
-        onPresetChange={setPreset}
-      />
+      <div className="relative overflow-hidden">
+        <AuroraBg variant="header" />
+        <Header
+          view={view}
+          onViewChange={setView}
+          preset={preset}
+          onPresetChange={setPreset}
+        />
+      </div>
 
       {error && (
         <p className="mx-auto max-w-3xl px-4 py-3 text-sm text-red-400">
