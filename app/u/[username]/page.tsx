@@ -6,6 +6,7 @@ import {
   getFavoriteBarIds,
   getCheckinSummary,
 } from "@/lib/profile/queries";
+import { getVisibleCheckins } from "@/lib/friends/queries";
 import ProfileView from "@/components/profile/ProfileView";
 
 // Next 16: route params are async.
@@ -25,6 +26,7 @@ export default async function PublicProfilePage({
     getCheckinSummary(profile.userId),
   ]);
   const isOwner = session?.user?.id === profile.userId;
+  const recentCheckins = await getVisibleCheckins(profile.userId, session?.user?.id ?? null);
 
   return (
     <ProfileView
@@ -32,6 +34,7 @@ export default async function PublicProfilePage({
       badges={badges}
       favoriteBarIds={favoriteBarIds}
       checkins={checkins}
+      recentCheckins={recentCheckins}
       isOwner={isOwner}
     />
   );
